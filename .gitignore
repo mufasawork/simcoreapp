@@ -38,3 +38,5 @@ assets/uploads/*
 *.sublime-workspace
 *.sublime-project
 
+## Database config
+application/config/database.php
