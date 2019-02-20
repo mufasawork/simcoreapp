@@ -67,7 +67,7 @@ $query_builder = TRUE;
 // Default myIgniter
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
+	'hostname' => 'sql42.main-hosting.eu',
 	'username' => 'u332808801_simv4',
 	'password' => 'k77YFEVnkpow',
 	'database' => 'u332808801_simv4',

@@ -37,6 +37,3 @@ assets/uploads/*
 *.stTheme.cache
 *.sublime-workspace
 *.sublime-project
-
-## Database config
-application/config/database.php

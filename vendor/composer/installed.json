@@ -57,17 +57,17 @@
     },
     {
         "name": "matthiasmullie/minify",
-        "version": "1.3.44",
-        "version_normalized": "1.3.44.0",
+        "version": "1.3.61",
+        "version_normalized": "1.3.61.0",
         "source": {
             "type": "git",
             "url": "https://github.com/matthiasmullie/minify.git",
-            "reference": "a7fc4a98ef8f2cf38bba701b51f1a84a1d67bc5c"
+            "reference": "d5acb8ce5b6acb7d11bafe97cecc533f6e4fd751"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/a7fc4a98ef8f2cf38bba701b51f1a84a1d67bc5c",
-            "reference": "a7fc4a98ef8f2cf38bba701b51f1a84a1d67bc5c",
+            "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/d5acb8ce5b6acb7d11bafe97cecc533f6e4fd751",
+            "reference": "d5acb8ce5b6acb7d11bafe97cecc533f6e4fd751",
             "shasum": ""
         },
         "require": {
@@ -76,11 +76,14 @@
             "php": ">=5.3.0"
         },
         "require-dev": {
-            "friendsofphp/php-cs-fixer": "~1.0",
+            "friendsofphp/php-cs-fixer": "~2.0",
             "matthiasmullie/scrapbook": "~1.0",
             "phpunit/phpunit": "~4.8"
         },
-        "time": "2017-03-16T16:42:50+00:00",
+        "suggest": {
+            "psr/cache-implementation": "Cache implementation to use with Minify::cache"
+        },
+        "time": "2018-11-26T23:10:39+00:00",
         "bin": [
             "bin/minifycss",
             "bin/minifyjs"
@@ -104,7 +107,7 @@
                 "role": "Developer"
             }
         ],
-        "description": "CSS & JS minifier",
+        "description": "CSS & JavaScript minifier, in PHP. Removes whitespace, strips comments, combines files (incl. @import statements and small assets in CSS files), and optimizes/shortens a few common programming patterns.",
         "homepage": "http://www.minifier.org",
         "keywords": [
             "JS",
@@ -116,17 +119,17 @@
     },
     {
         "name": "matthiasmullie/path-converter",
-        "version": "1.1.0",
-        "version_normalized": "1.1.0.0",
+        "version": "1.1.2",
+        "version_normalized": "1.1.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/matthiasmullie/path-converter.git",
-            "reference": "08551ec1b156e923c242a10ab484bd4d6ead6631"
+            "reference": "5e4b121c8b9f97c80835c1d878b0812ba1d607c9"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/matthiasmullie/path-converter/zipball/08551ec1b156e923c242a10ab484bd4d6ead6631",
-            "reference": "08551ec1b156e923c242a10ab484bd4d6ead6631",
+            "url": "https://api.github.com/repos/matthiasmullie/path-converter/zipball/5e4b121c8b9f97c80835c1d878b0812ba1d607c9",
+            "reference": "5e4b121c8b9f97c80835c1d878b0812ba1d607c9",
             "shasum": ""
         },
         "require": {
@@ -136,7 +139,7 @@
         "require-dev": {
             "phpunit/phpunit": "~4.8"
         },
-        "time": "2017-01-26T08:54:49+00:00",
+        "time": "2018-10-25T15:19:41+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -167,23 +170,23 @@
     },
     {
         "name": "maximebf/debugbar",
-        "version": "1.13.1",
-        "version_normalized": "1.13.1.0",
+        "version": "v1.15.0",
+        "version_normalized": "1.15.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/maximebf/php-debugbar.git",
-            "reference": "afee79a236348e39a44cb837106b7c5b4897ac2a"
+            "reference": "30e7d60937ee5f1320975ca9bc7bcdd44d500f07"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/maximebf/php-debugbar/zipball/afee79a236348e39a44cb837106b7c5b4897ac2a",
-            "reference": "afee79a236348e39a44cb837106b7c5b4897ac2a",
+            "url": "https://api.github.com/repos/maximebf/php-debugbar/zipball/30e7d60937ee5f1320975ca9bc7bcdd44d500f07",
+            "reference": "30e7d60937ee5f1320975ca9bc7bcdd44d500f07",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.0",
             "psr/log": "^1.0",
-            "symfony/var-dumper": "^2.6|^3.0"
+            "symfony/var-dumper": "^2.6|^3.0|^4.0"
         },
         "require-dev": {
             "phpunit/phpunit": "^4.0|^5.0"
@@ -193,11 +196,11 @@
             "monolog/monolog": "Log using Monolog",
             "predis/predis": "Redis storage"
         },
-        "time": "2017-01-05T08:46:19+00:00",
+        "time": "2017-12-15T11:13:46+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "1.13-dev"
+                "dev-master": "1.14-dev"
             }
         },
         "installation-source": "dist",
@@ -230,17 +233,17 @@
     },
     {
         "name": "mpdf/mpdf",
-        "version": "v7.1.8",
-        "version_normalized": "7.1.8.0",
+        "version": "v7.1.9",
+        "version_normalized": "7.1.9.0",
         "source": {
             "type": "git",
             "url": "https://github.com/mpdf/mpdf.git",
-            "reference": "5a124ed382cf9241597c7ba12f98a756daa7f8df"
+            "reference": "a0fc1215d2306aa3b4ba6e97bd6ebe4bab6a88fb"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/mpdf/mpdf/zipball/5a124ed382cf9241597c7ba12f98a756daa7f8df",
-            "reference": "5a124ed382cf9241597c7ba12f98a756daa7f8df",
+            "url": "https://api.github.com/repos/mpdf/mpdf/zipball/a0fc1215d2306aa3b4ba6e97bd6ebe4bab6a88fb",
+            "reference": "a0fc1215d2306aa3b4ba6e97bd6ebe4bab6a88fb",
             "shasum": ""
         },
         "require": {
@@ -263,7 +266,7 @@
             "ext-xml": "Needed mainly for SVG manipulation",
             "ext-zlib": "Needed for compression of embedded resources, such as fonts"
         },
-        "time": "2019-01-08T11:38:17+00:00",
+        "time": "2019-02-06T13:32:19+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -397,23 +400,23 @@
     },
     {
         "name": "psr/log",
-        "version": "1.0.2",
-        "version_normalized": "1.0.2.0",
+        "version": "1.1.0",
+        "version_normalized": "1.1.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/php-fig/log.git",
-            "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d"
+            "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/php-fig/log/zipball/4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
-            "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
+            "url": "https://api.github.com/repos/php-fig/log/zipball/6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
+            "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.0"
         },
-        "time": "2016-10-10T12:19:37+00:00",
+        "time": "2018-11-20T15:27:04+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -497,17 +500,17 @@
     },
     {
         "name": "symfony/polyfill-mbstring",
-        "version": "v1.3.0",
-        "version_normalized": "1.3.0.0",
+        "version": "v1.10.0",
+        "version_normalized": "1.10.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/polyfill-mbstring.git",
-            "reference": "e79d363049d1c2128f133a2667e4f4190904f7f4"
+            "reference": "c79c051f5b3a46be09205c73b80b346e4153e494"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/e79d363049d1c2128f133a2667e4f4190904f7f4",
-            "reference": "e79d363049d1c2128f133a2667e4f4190904f7f4",
+            "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/c79c051f5b3a46be09205c73b80b346e4153e494",
+            "reference": "c79c051f5b3a46be09205c73b80b346e4153e494",
             "shasum": ""
         },
         "require": {
@@ -516,11 +519,11 @@
         "suggest": {
             "ext-mbstring": "For best performance"
         },
-        "time": "2016-11-14T01:06:16+00:00",
+        "time": "2018-09-21T13:07:52+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "1.3-dev"
+                "dev-master": "1.9-dev"
             }
         },
         "installation-source": "dist",
@@ -557,38 +560,105 @@
         ]
     },
     {
-        "name": "symfony/var-dumper",
-        "version": "v3.2.7",
-        "version_normalized": "3.2.7.0",
+        "name": "symfony/polyfill-php72",
+        "version": "v1.10.0",
+        "version_normalized": "1.10.0.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/var-dumper.git",
-            "reference": "81dce20f69a8b40427e1f4e6462178df87cafc03"
+            "url": "https://github.com/symfony/polyfill-php72.git",
+            "reference": "9050816e2ca34a8e916c3a0ae8b9c2fccf68b631"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/var-dumper/zipball/81dce20f69a8b40427e1f4e6462178df87cafc03",
-            "reference": "81dce20f69a8b40427e1f4e6462178df87cafc03",
+            "url": "https://api.github.com/repos/symfony/polyfill-php72/zipball/9050816e2ca34a8e916c3a0ae8b9c2fccf68b631",
+            "reference": "9050816e2ca34a8e916c3a0ae8b9c2fccf68b631",
             "shasum": ""
         },
         "require": {
-            "php": ">=5.5.9",
-            "symfony/polyfill-mbstring": "~1.0"
+            "php": ">=5.3.3"
         },
-        "conflict": {
-            "phpunit/phpunit": "<4.8.35|<5.4.3,>=5.0"
-        },
-        "require-dev": {
-            "twig/twig": "~1.20|~2.0"
-        },
-        "suggest": {
-            "ext-symfony_debug": ""
-        },
-        "time": "2017-03-12T16:07:05+00:00",
+        "time": "2018-09-21T13:07:52+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "3.2-dev"
+                "dev-master": "1.9-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Polyfill\\Php72\\": ""
+            },
+            "files": [
+                "bootstrap.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Nicolas Grekas",
+                "email": "p@tchwork.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony polyfill backporting some PHP 7.2+ features to lower PHP versions",
+        "homepage": "https://symfony.com",
+        "keywords": [
+            "compatibility",
+            "polyfill",
+            "portable",
+            "shim"
+        ]
+    },
+    {
+        "name": "symfony/var-dumper",
+        "version": "v4.2.3",
+        "version_normalized": "4.2.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/var-dumper.git",
+            "reference": "223bda89f9be41cf7033eeaf11bc61a280489c17"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/var-dumper/zipball/223bda89f9be41cf7033eeaf11bc61a280489c17",
+            "reference": "223bda89f9be41cf7033eeaf11bc61a280489c17",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^7.1.3",
+            "symfony/polyfill-mbstring": "~1.0",
+            "symfony/polyfill-php72": "~1.5"
+        },
+        "conflict": {
+            "phpunit/phpunit": "<4.8.35|<5.4.3,>=5.0",
+            "symfony/console": "<3.4"
+        },
+        "require-dev": {
+            "ext-iconv": "*",
+            "symfony/console": "~3.4|~4.0",
+            "symfony/process": "~3.4|~4.0",
+            "twig/twig": "~1.34|~2.4"
+        },
+        "suggest": {
+            "ext-iconv": "To convert non-UTF-8 strings to UTF-8 (or symfony/polyfill-iconv in case ext-iconv cannot be used).",
+            "ext-intl": "To show region name in time zone dump",
+            "symfony/console": "To use the ServerDumpCommand and/or the bin/var-dump-server script"
+        },
+        "time": "2019-01-30T11:44:30+00:00",
+        "bin": [
+            "Resources/bin/var-dump-server"
+        ],
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "4.2-dev"
             }
         },
         "installation-source": "dist",
