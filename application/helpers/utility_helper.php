@@ -294,3 +294,10 @@ if(!function_exists('integerToRoman')) {
     }
 
 }
+
+if(!function_exists('clean_string')) {
+  function clean_string($string) {
+     $string = str_replace(' ', '', $string); // Replaces all spaces with hyphens.
+     return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+  }
+}
