@@ -29,7 +29,7 @@
 </head>
 <body class="hold-transition skin-<?php echo $this->config->item('skin') ?> layout-top-nav">
     <!-- Site wrapper -->
-    <div class="wrapper"> 
+    <div class="wrapper">
         <header class="main-header">
             <nav class="navbar navbar-static-top" role="navigation">
                 <div class="container">
@@ -66,7 +66,7 @@
                         <ul class="nav navbar-nav">
                             <?php if (!$this->ion_auth->logged_in()): ?>
                                 <li><a href="<?php echo site_url('login') ?>" title="Login"><i class="fa fa-sign-in fa-fw"></i> <?php echo lang('login') ?></a></li>
-                                <li><a href="<?php echo site_url('register') ?>" title="Sign Up"><?php echo lang('signup') ?></a></li>
+                                <!-- <li><a href="<?php echo site_url('register') ?>" title="Sign Up"><?php echo lang('signup') ?></a></li> -->
                             <?php else: ?>
                                 <li class="dropdown user user-menu">
                                     <?php $user = $this->ion_auth->user()->row() ?>
@@ -125,7 +125,7 @@
             </section><!-- /.content -->
         </div><!-- ./wrapper -->
         <footer class="main-footer">
-            <div class="container">            
+            <div class="container">
                 <div class="pull-right hidden-xs">
                     <b>Version</b> <?php echo $this->config->item('version') ?>
                 </div>
