@@ -207,7 +207,9 @@ class Trainer extends MY_Controller
 
         $code = date("dm", $date2);
 
-        $username = substr(strtolower(trim($post_array['nama_trainer'])), 0, 5).$code;
+        $getname = clean_string(strtolower(trim($post_array['nama_trainer'])));
+
+        $username = substr($getname, 0, 5).$code;
         $password = 'bismillah';
         $email = $username.'@uf.app';
         $additional_data = array(
