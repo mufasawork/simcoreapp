@@ -527,6 +527,10 @@ class Munaqasyah extends MY_Controller
         }
     }
 
+    public function import_success()
+    {
+        echo "success";
+    }
 
     public function _callback_photo_upload($uploader_response, $field_info, $files_to_upload)
     {
@@ -607,8 +611,8 @@ class Munaqasyah extends MY_Controller
     {
         $array = explode(',', $value);
         foreach ($array as $val) {
-            $trainer = db_get_row('trainer', array('id_trainer' => $val))->nama_panggilan;
-            $html .= '<div>'.$trainer.'</div>';
+            $trainer = db_get_row('trainer', array('id_trainer' => $val))->nama_trainer;
+            $html .= '<div>'.ucfirst($trainer).'</div>';
         }
         return $html;
     }
