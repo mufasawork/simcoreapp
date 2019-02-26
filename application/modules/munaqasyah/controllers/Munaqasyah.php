@@ -8,8 +8,8 @@ class Munaqasyah extends MY_Controller
     public function __construct()
     {
         parent::__construct();
-
         $this->load->helper('string');
+        $this->load->library('mobile_detect');
     }
 
     public function index()
@@ -177,6 +177,8 @@ class Munaqasyah extends MY_Controller
 
     public function penilaian($code)
     {
+        $detect = new Mobile_Detect;
+
         $munaqasyah = db_get_row('tm_munaqasyah', array('code' => $code));
         // print_r($munaqasyah);
 
@@ -186,8 +188,14 @@ class Munaqasyah extends MY_Controller
         $crud->set_subject("Peserta");
 
         // // Show in
+        if($detect->isMobile()){
+          $crud->columns(["nama_lengkap", "kelas"]);
+          $crud->callback_column('nama_lengkap', array($this, '_callback_nama_lengkap_nilai_mobile'));
+        } else {
+          $crud->columns(["nama_lengkap", "kelas", "foto","status","rekap_nilai"]);
+          $crud->callback_column('nama_lengkap', array($this, '_callback_nama_lengkap_nilai_column'));
+        }
 
-        $crud->columns(["nama_lengkap", "kelas", "foto","status","rekap_nilai"]);
         // Show alamat in callback nama lengkap
 
         // Fields type
@@ -201,7 +209,8 @@ class Munaqasyah extends MY_Controller
 
         $crud->callback_column('foto', array($this,'_callback_photo_column'));
         $crud->callback_after_upload(array($this, '_callback_photo_upload'));
-        $crud->callback_column('nama_lengkap', array($this, '_callback_nama_lengkap_nilai_column'));
+
+
         $crud->callback_column('rekap_nilai', array($this, '_callback_rekap_nilai_column'));
         $crud->callback_column('status', array($this, '_callback_status_lulus_column'));
         $crud->callback_before_insert(array($this, '_callback_before_insert'));
@@ -559,6 +568,23 @@ class Munaqasyah extends MY_Controller
         return $html;
     }
 
+    public function _callback_nama_lengkap_nilai_mobile($value, $row)
+    {
+        $munaqasyah = db_get_row('tm_munaqasyah', array('id_munaqasyah' => $row->munaqasyah_id));
+        $kriteria = db_get_all_data('tm_kriteria_nilai', array('jenis_munaqasyah_id' => $munaqasyah->jenis_munaqasyah_id));
+
+        $html ='<div><b><a href="/munaqasyah/menu_penilaian/'.$row->id_peserta_munaqasyah.'">'.$value.'</a></b></div>
+        <div>'.$row->alamat.'</div><br>';
+        foreach ($kriteria as $k) {
+            $v = db_get_row('tm_rekap_nilai', array('peserta_munaqasyah_id' => $row->id_peserta_munaqasyah, 'kriteria_nilai_id' => $k->id_kriteria_nilai))->nilai;
+            $h = '<dt>'.$k->display_name.'</dt><dd>'.$v.'</dd>';
+            $a .= $h;
+        }
+
+        $html .= '<dl class="dl-horizontal">'.$a.'</dl>';
+        return $html;
+    }
+
     public function _callback_nama_lengkap_nilai_column($value, $row)
     {
         $munaqasyah = db_get_row('tm_munaqasyah', array('id_munaqasyah' => $row->munaqasyah_id));
@@ -650,12 +676,9 @@ class Munaqasyah extends MY_Controller
 
     public function _callback_rekap_nilai_column($value, $row)
     {
-        $html = 'halo';
 
         $munaqasyah = db_get_row('tm_munaqasyah', array('id_munaqasyah' => $row->munaqasyah_id));
-
         $kriteria = db_get_all_data('tm_kriteria_nilai', array('jenis_munaqasyah_id' => $munaqasyah->jenis_munaqasyah_id));
-
         foreach ($kriteria as $k) {
             $v = db_get_row('tm_rekap_nilai', array('peserta_munaqasyah_id' => $row->id_peserta_munaqasyah, 'kriteria_nilai_id' => $k->id_kriteria_nilai))->nilai;
             $h = '<dt>'.$k->display_name.'</dt><dd>'.$v.'</dd>';
