@@ -301,3 +301,14 @@ if(!function_exists('clean_string')) {
      return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
   }
 }
+
+
+if(!function_exists('is_yyyymmdd')){
+  function is_yyyymmdd($date) {
+    if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$date)) {
+        return true;
+      } else {
+        return false;
+      }
+  }
+}

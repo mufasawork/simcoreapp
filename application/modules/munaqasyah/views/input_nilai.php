@@ -3,7 +3,7 @@
   -webkit-appearance: none;
   width: 100%;
   height: 15px;
-  border-radius: 5px;   
+  border-radius: 5px;
   background: #d3d3d3;
   outline: none;
   opacity: 0.7;
@@ -16,7 +16,7 @@
   appearance: none;
   width: 25px;
   height: 25px;
-  border-radius: 50%; 
+  border-radius: 50%;
   background: #4CAF50;
   cursor: pointer;
 }
@@ -34,7 +34,7 @@
     <div class="col-sm-12 col-lg-8">
         <div class="box box-primary">
             <div class="box-header">
-                <i class="fa fa-user"></i> DATA PESERTA  
+                <i class="fa fa-user"></i> DATA PESERTA
             </div>
             <div class="box-body">
                 <div class="col-sm-12">
@@ -70,7 +70,7 @@
                 <?php $aspek_nilai = db_get_all_data('tm_aspek_nilai', array('kriteria_nilai_id' => $kriteria->id_kriteria_nilai))?>
                 <?php foreach($aspek_nilai as $a):?>
                     <?php if($method == 'edit' ):?>
-                    <?php $value = db_get_row('tm_nilai_munaqasyah', array('peserta_munaqasyah_id' => $peserta->id_peserta_munaqasyah, 'aspek_nilai_id' =>$a->id_aspek_nilai))->nilai;?> 
+                    <?php $value = db_get_row('tm_nilai_munaqasyah', array('peserta_munaqasyah_id' => $peserta->id_peserta_munaqasyah, 'aspek_nilai_id' =>$a->id_aspek_nilai))->nilai;?>
                         <div class="form-group">
                             <label for="<?= $a->aspek?>" class="col-sm-2 control-label"><?= $a->display_name?></label>
                             <div class="col-sm-8">
@@ -89,14 +89,20 @@
                                 <input name="aspek_nilai_id[]" value="<?= $a->id_aspek_nilai ?>" hidden>
                             </div>
                             <div class="pt-2 col-sm-2 col-xs-2">
-                                <span id="val-<?= $a->aspek?>"></span>
+                                <span id="val-<?= $a->aspek?>">0</span>
                             </div>
                         </div>
-                        
+
                     <?php endif?>
-                        
+
                 <?php endforeach?>
-                
+                <div>
+                  <label for="sum" class="col-sm-2 control-label">Total </label>
+                  <div class="pt-4 col-sm-8 col-xs-10">
+                    <span id="sum"></span>
+                  </div>
+                </div>
+
             </div>
             <div class="box-footer">
                 <a href="javascript:history.back()" class="btn btn-default btn-flat">Kembali</a>
@@ -108,15 +114,31 @@
 </div>
 <div id="demo"></div>
 
-<?php foreach($aspek_nilai as $a):?>
 <script>
+<?php foreach($aspek_nilai as $a):?>
 document.getElementById("val-<?= $a->aspek?>").innerHTML = document.getElementById("<?= $a->aspek?>").value; // Display the default slider value
 
 // Update the current slider value (each time you drag the slider handle)
 document.getElementById("<?= $a->aspek?>").oninput = function() {
     document.getElementById("val-<?= $a->aspek?>").innerHTML = this.value;
 }
-</script>
+
 <?php endforeach?>
 
+$('.slider').each(function(){
+    $(this).change(function(){
+        calculateSum();
+    });
+});
 
+function calculateSum() {
+  var sum = 0;
+  $('.slider').each(function(){
+    if(!isNaN(this.value) && this.value.length!=0) {
+				sum += parseFloat(this.value);
+			}
+  });
+  document.getElementById("sum").innerHTML = sum;
+}
+
+</script>
