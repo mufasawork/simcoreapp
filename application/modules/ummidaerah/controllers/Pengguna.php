@@ -72,7 +72,7 @@ class Pengguna extends MY_Controller
           }
         } else {
 
-          if ($state == "list" || $state == 'ajax_list' || $state == 'success') {
+          if ($state == "list" || $state == 'ajax_list' || $state == 'success' || $state == 'ajax_list_info') {
             // $crud->set_table('view_pengguna');
             $crud->columns(["no_register","nama", "jenis_lembaga_id", "provinsi", "kabupaten",
             // "ummi_daerah",
@@ -113,6 +113,8 @@ class Pengguna extends MY_Controller
         $crud->field_type("koordinator", "string");
         if ($state == 'add' || $state == 'edit'){
           $crud->field_type("status_aktif", "true_false", array('inactive','active'));
+          $crud->set_relation('provinsi_id', 'wilayah_provinsi', 'provinsi');
+          $crud->set_relation('kabupaten_id', 'wilayah_kabupaten', 'kabupaten');
         } else {
           $crud->field_type("status_aktif", "true_false", array('<i class="fa fa-times-circle-o" style="color:red"></i> inactive','<i class="fa fa-check-circle-o"></i> active'));
 
@@ -126,8 +128,7 @@ class Pengguna extends MY_Controller
 
         // Relation n-n
         $crud->set_relation("jenis_lembaga_id", "jenis_lembaga", "jenis_lembaga");
-        $crud->set_relation('provinsi_id', 'wilayah_provinsi', 'provinsi');
-        $crud->set_relation('kabupaten_id', 'wilayah_kabupaten', 'kabupaten');
+
 
         // Validation
         $crud->set_rules("nama", "Nama", "required");

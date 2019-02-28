@@ -42,7 +42,7 @@ class Pengguna extends MY_Controller
                 // $crud->set_table('view_pengguna');
                 $crud->columns(["no_register","nama"]);
                 $crud->callback_column('nama', array($this->crud_model,'_callback_nama_is_mobile'));
-                
+
                 $crud->unset_delete();
 
                 $js2 = '
@@ -55,7 +55,7 @@ class Pengguna extends MY_Controller
             </script>';
             }
         } else {
-            if ($state == "list" || $state == 'ajax_list' || $state == 'success') {
+            if ($state == "list" || $state == 'ajax_list' || $state == 'success' || $state == 'ajax_list_info') {
                 // $crud->set_table('view_pengguna');
                 $crud->columns(["no_register","nama", "jenis_lembaga_id", "provinsi", "kabupaten",
             "ummi_daerah",
@@ -96,6 +96,9 @@ class Pengguna extends MY_Controller
         $crud->field_type("koordinator", "string");
         if ($state == 'add' || $state == 'edit') {
             $crud->field_type("status_aktif", "true_false", array('inactive','active'));
+            $crud->set_relation('provinsi_id', 'wilayah_provinsi', 'provinsi');
+            $crud->set_relation('kabupaten_id', 'wilayah_kabupaten', 'kabupaten');
+
         } else {
             $crud->field_type("status_aktif", "true_false", array('<i class="fa fa-times-circle-o" style="color:red"></i> inactive','<i class="fa fa-check-circle-o"></i> active'));
         }
@@ -108,8 +111,6 @@ class Pengguna extends MY_Controller
 
         // Relation n-n
         $crud->set_relation("jenis_lembaga_id", "jenis_lembaga", "jenis_lembaga");
-        $crud->set_relation('provinsi_id', 'wilayah_provinsi', 'provinsi');
-        $crud->set_relation('kabupaten_id', 'wilayah_kabupaten', 'kabupaten');
 
         // Validation
         $crud->set_rules("nama", "Nama", "required");
@@ -277,8 +278,10 @@ class Pengguna extends MY_Controller
     {
         $row = db_get_row('pengguna', array('id_customer' => $id));
         $year = date('y', strtotime($row->tanggal_mulai));
+
+
         // $year = 2018;
-        $check = db_get_count('register', array('year' => $year));
+        $check = db_get_count('register', array('year' => date('Y', strtotime($row->tanggal_mulai))));
 
         if (empty($check)) {
             $no = '001';
@@ -310,29 +313,29 @@ class Pengguna extends MY_Controller
         );
 
         $this->db->insert('register', $insert);
-        
-        $pengguna = $row; 
-        
+
+        $pengguna = $row;
+
         $username = $no_register;
         $password = 'bismillah';
         $email = $username.'@ufcore.app';
-        
+
         $additional_data = array(
         'customer_id' => $id,
         'no_register' => $no_register
         );
         $group = array('3');
-        
+
         $this->ion_auth->register($username, $password, $email, $additional_data, $group);
-        
+
         $update_data = array(
         'additional' => '['.json_encode($additional_data).']',
         'full_name' => $pengguna->nama
         );
-        
+
         $this->db->where('email', $email);
         $this->db->update('users', $update_data);
-        
+
 
         redirect_referrer();
     }
@@ -481,7 +484,7 @@ class Pengguna extends MY_Controller
         $this->layout->auth();
         $this->layout->render('blank', $template_data); // front - auth - admin
     }
-    
+
     public function infografis()
     {
         $query1 = $this->db->query('
@@ -491,51 +494,51 @@ class Pengguna extends MY_Controller
            SELECT ColumnB, ColumnA asum
            FROM cteRanked
            gROUP BY ColumnB
-          
+
         ), cteRankedd AS
         (
            SELECT asum, ColumnB, ROW_NUMBER() OVER(ORDER BY ColumnB) rownum
            FROM cte
-        ) 
+        )
         SELECT ColumnB, (SELECT SUM(asum) FROM cteRankedd c2 WHERE c2.rownum <= c1.rownum) AS ColumnA
         FROM cteRankedd c1;
         ')->result();
-        
+
         $query2 = $this->db->query('
         SELECT t.jenis_lembaga_id, j.jenis_lembaga, count(t.id_customer) as jumlah
         FROM pengguna as t
         LEFT JOIN jenis_lembaga as j ON j.id_jenis_lembaga = t.jenis_lembaga_id
-        WHERE j.`status` = "Formal" 
+        WHERE j.`status` = "Formal"
         GROUP BY t.jenis_lembaga_id
         ')->result();
-        
-        
+
+
         $query3 = $this->db->query('
         SELECT t.jenis_lembaga_id, j.jenis_lembaga, count(t.id_customer) as jumlah
         FROM pengguna as t
         LEFT JOIN jenis_lembaga as j ON j.id_jenis_lembaga = t.jenis_lembaga_id
-        WHERE j.`status` = "Informal" 
+        WHERE j.`status` = "Informal"
         GROUP BY t.jenis_lembaga_id
         ')->result();
-        
+
         $query4 = $this->db->query('
         SELECT count(distinct t.provinsi_id) as j_provinsi
         FROM pengguna as t
         ')->row()->j_provinsi;
-        
+
         $query5 = $this->db->query('
         SELECT count(u.id_ummi_daerah) as ummi_daerah
         FROM ummi_daerah as u
         ')->row()->ummi_daerah;
-        
+
         $query6 = $this->db->query('
         SELECT w.provinsi, w.kode, count(t.provinsi_id) jumlah
         FROM wilayah_provinsi w
         LEFT JOIN pengguna t ON w.id = t.provinsi_id
         GROUP BY w.kode
         ')->result();
-        
-        
+
+
         $data['perkembangan_pengguna'] = $query1;
         $data['formal'] = $query2;
         $data['informal'] = $query3;
@@ -546,20 +549,20 @@ class Pengguna extends MY_Controller
         $data['lembaga']    = $this->db->query('SELECT COUNT(id_customer) as value FROM pengguna WHERE status_aktif = 1')->row()->value;
         $data['guru']       = $this->db->query('SELECT SUM(s.jumlah_guru) as value FROM kondisi_guru as s')->row()->value;
         $data['santri']     = $this->db->query('SELECT SUM(s.jumlah_siswa) as value FROM kondisi_siswa as s')->row()->value;
-        
-        
-        
+
+
+
         // $this->load->view('backend/standart/administrator/customers/infografis',$this->data);
-        
+
         $this->layout->set_wrapper('infografis', $data, 'page', false);
 
         $template_data["title"] = "List Guru Quran Lembaga";
         $template_data["crumb"] = ["Guru_Quran" => ""];
         $this->layout->auth();
         $this->layout->render('admin', $template_data); // front - auth - admin
-        
+
         // print_r($query1);
-        
+
     }
 }
 
