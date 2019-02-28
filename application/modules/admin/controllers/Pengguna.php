@@ -278,8 +278,10 @@ class Pengguna extends MY_Controller
     {
         $row = db_get_row('pengguna', array('id_customer' => $id));
         $year = date('y', strtotime($row->tanggal_mulai));
+
+
         // $year = 2018;
-        $check = db_get_count('register', array('year' => $year));
+        $check = db_get_count('register', array('year' => date('Y', strtotime($row->tanggal_mulai))));
 
         if (empty($check)) {
             $no = '001';
