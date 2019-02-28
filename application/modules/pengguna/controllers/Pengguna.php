@@ -42,7 +42,7 @@ class Pengguna extends MY_Controller
           'additional' => '['.json_encode($additional_data).']',
           'full_name' => $pengguna->nama
         );
-        
+
         $this->db->where('email',$email);
         $this->db->update('users',$update_data);
 
@@ -56,7 +56,7 @@ class Pengguna extends MY_Controller
      * CRUD
      */
 	public function crud()
-	{  
+	{
 		$crud = new grocery_CRUD();
 
 		$state = $crud->getState();
@@ -93,7 +93,7 @@ class Pengguna extends MY_Controller
 		// Show in
 		$crud->fields(["nama", "jenis_lembaga_id", "alamat", "provinsi_id", "kabupaten_id", "kecamatan", "nomor_telp", "nomor_fax", "email", "perpekan", "perhari", "tanggal_mulai", "kepala_lembaga", "koordinator", "is_turjuman", "is_tahfidz", "is_dewasa", "status_aktif"]);
 
-		if($state == "list" || $state == 'ajax_list'){
+		if($state == "list" || $state == 'ajax_list' || $state == 'success' || $state == 'ajax_list_info'){
 			// $crud->set_table('view_pengguna');
 			$crud->columns(["no_register","nama", "jenis_lembaga_id", "provinsi", "kabupaten", "status_aktif",'update_time']);
 		} elseif ($state == 'export'){
@@ -124,7 +124,7 @@ class Pengguna extends MY_Controller
 		// Relation n-n
 		$crud->set_relation("jenis_lembaga_id", "jenis_lembaga", "jenis_lembaga");
 		$crud->set_relation('provinsi_id','wilayah_provinsi','provinsi');
-        $crud->set_relation('kabupaten_id', 'wilayah_kabupaten', 'kabupaten');
+    $crud->set_relation('kabupaten_id', 'wilayah_kabupaten', 'kabupaten');
 
 		// Validation
 		$crud->set_rules("nama", "Nama", "required");
@@ -218,7 +218,7 @@ class Pengguna extends MY_Controller
 	}
 
 
-    
+
 
 
 
