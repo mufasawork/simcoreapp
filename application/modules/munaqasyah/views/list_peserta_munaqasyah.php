@@ -1,5 +1,7 @@
 <div class="row">
     <div class="col-lg-12">
+      <?= message_box('success', TRUE)?>
+      <?= message_box('error', TRUE)?>
         <div class="box box-primary">
             <?php if($munaqasyah->status == 'terlaksana'):?>
             <div class="ribbon ribbon-top-right"><span>TERLAKSANA</span></div>

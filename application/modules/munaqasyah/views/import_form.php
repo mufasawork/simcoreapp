@@ -7,14 +7,14 @@
       <div class="box box-primary">
         <?php echo form_open('','enctype="multipart/form-data"')?>
         <div class="box-body">
-          <p>Silahkan download template file <a href="/excel/template_trainer.xlsx">disini</a> </p>
+          <p>Silahkan download template file <a href="/excel/template_peserta_munaqasyah.xlsx">disini</a> </p>
           <div class="form-group">
             <label for="input_fime">File input</label>
             <input type="file" id="file" name="file">
             <p class="help-block">FIle yang dapat diimport hanya file dengan extension .xlsx.</p>
           </div>
           <div class="">
-            <b>PERHATIAN : KETIKA MENGISI TANGGAL_LAHIR FORMAT TANGGAL YANG BENAR ADALAH YYYY-MM-DD contoh 1988-05-03</b><br>
+            <b>PERHATIAN : KETIKA MENGISI TANGGAL_LAHIR FORMAT TANGGAL YANG BENAR ADALAH DD/MM/YYYY contoh 05/10/2017</b><br>
             <b>PERHATIKAN DAN JANGAN SAMPAI SALAH INPUT DATA TANGGAL LAHIR YA</b>
           </div>
         </div>
@@ -73,7 +73,7 @@
                   <tr>
                     <td <?php if($nama_lengkap == ''){ echo 'class="bg-yellow"'; }?>><?=$nama_lengkap?></td>
                     <td <?php if($tempat_lahir == ''){ echo 'class="bg-yellow"'; }?>><?=$tempat_lahir?></td>
-                    <td <?php if($tanggal_lahir == '' or $allow_date == false){ echo 'class="bg-yellow"'; }?>><?=$tanggal_lahir?></td>
+                    <td <?php if($tanggal_lahir == ''){ echo 'class="bg-yellow"'; }?>><?=$tanggal_lahir?></td>
                     <td <?php if($alamat == ''){ echo 'class="bg-yellow"'; }?>><?=$alamat?></td>
                     <td <?php if(empty($kelas)){ echo 'class="bg-yellow"'; }?>><?=$kelas?></td>
                   </tr>

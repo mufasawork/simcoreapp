@@ -114,8 +114,10 @@ class Munaqasyah extends MY_Controller
 
     public function peserta($code)
     {
+        $detect = new Mobile_Detect;
         $munaqasyah = db_get_row('tm_munaqasyah', array('code' => $code));
-        // print_r($munaqasyah);
+
+         // print_r($munaqasyah);
 
         $crud = new grocery_CRUD();
 
@@ -124,7 +126,11 @@ class Munaqasyah extends MY_Controller
 
         // // Show in
         $crud->fields(["munaqasyah_id","nama_lengkap", "tempat_lahir", "tanggal_lahir", "alamat", "kelas", "foto"]);
-        $crud->columns(["nama_lengkap", "tanggal_lahir", "kelas", "foto"]);
+        if($detect->isMobile()){
+          $crud->columns(["nama_lengkap", "kelas", "foto"]);
+        } else {
+          $crud->columns(["nama_lengkap", "tanggal_lahir", "kelas", "foto"]);
+        }
         // Show alamat in callback nama lengkap
 
         // Fields type
@@ -155,8 +161,20 @@ class Munaqasyah extends MY_Controller
         // Unset action
         $crud->unset_action();
         $crud->unset_print();
+        $crud->unset_export();
 
-        $data = (array) $crud->render();
+        $js='<script>
+        $(".tDiv3").append(`<a href="../import/form/'.$code.'" class="btn btn-info btn-flat"><i class="fa fa-file-excel-o"></i> Import</a>`);
+        </script>';
+
+    		$output = $crud->render();
+
+        $output->output .= $js;
+
+        $data = (array) $output;
+
+
+
         $lembaga = db_get_row('view_pengguna', array('id_customer' => $munaqasyah->customer_id));
         $data['jenis_sertifikasi'] = db_get_row('tm_jenis_munaqasyah', array('id_jenis_munaqasyah' => $munaqasyah->jenis_munaqasyah_id))->display_name;
         $data['nama_lembaga'] = $lembaga->nama.' | '.$lembaga->provinsi.' | '.$lembaga->kabupaten;

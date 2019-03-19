@@ -21,6 +21,10 @@ class Import extends MY_Controller
 
     public function form($code)
     {
+        $munaqasyah = db_get_row('tm_munaqasyah', array('code' => $code));
+        if(!isset($munaqasyah)){
+            $this->message->custom_error_msg('munaqasyah/data','Error: Kode tidak ditemukan');
+        }
 
         if(isset($_POST['preview']))
         {
@@ -53,8 +57,8 @@ class Import extends MY_Controller
           "Munaqasyah" => "",
           "Import" => ""
         ];
-        $this->layout->auth();
         $this->layout->render('admin', $template_data); // front - auth - admin
+        $this->layout->auth();
 
     }
 
@@ -78,12 +82,14 @@ class Import extends MY_Controller
         foreach ($sheet as $row) {
           // code...
           if ($numrow > 1) {
+              $valid_date = implode("-", array_reverse(explode("/", $row['C'])));
+
               // get data from row
               $data = array(
                 'munaqasyah_id' => $munaqasyah_id,
                 'nama_lengkap' => $row['A'],
                 'tempat_lahir' => $row['B'] ,
-                'tanggal_lahir' => $row['C'] ,
+                'tanggal_lahir' => $valid_date,
                 'alamat' => $row['D'] ,
                 'kelas' => $row['E']
               );
