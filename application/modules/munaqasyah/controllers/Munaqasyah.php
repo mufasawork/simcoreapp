@@ -48,8 +48,8 @@ class Munaqasyah extends MY_Controller
 
         // Fields type
         $crud->field_type("pernyataan", "true_false", array('Tidak','Ya'));
-        $crud->field_type("penanggung_jawab", "readonly");
-        $crud->field_type("no_contact", "readonly");
+        $crud->field_type("penanggung_jawab", "");
+        $crud->field_type("no_contact", "");
         $crud->field_type("status", "hidden", "permohonan");
 
         if ($this->ion_auth->in_group('ummi_daerah')) {
@@ -76,9 +76,9 @@ class Munaqasyah extends MY_Controller
         $crud->set_relation("jenis_munaqasyah_id", "tm_jenis_munaqasyah", "display_name");
 
         if ($this->ion_auth->in_group('ummi_daerah')) {
-            $crud->set_relation("customer_id", "view_pengguna", "{nama}", array('id_ummi_daerah' =>$ummi_daerah_id));
+            $crud->set_relation("customer_id", "view_pengguna", "{jenis_lembaga} | {nama}", array('id_ummi_daerah' =>$ummi_daerah_id));
         } else {
-            $crud->set_relation("customer_id", "pengguna", "{nama}");
+            $crud->set_relation("customer_id", "view_pengguna", "{display_name}");
         }
 
         // Where Clause
@@ -88,6 +88,7 @@ class Munaqasyah extends MY_Controller
 
         // Display As
         $crud->display_as(array(
+            'customer_id' => 'Lembaga Pengguna',
             'nama_lembaga' =>'Pemohon Munaqasyah',
             'tanggal_order' => 'Order Date',
             'jenis_munaqasyah_id' => 'Jenis Munaqasyah',
