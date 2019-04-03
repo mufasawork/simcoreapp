@@ -44,7 +44,7 @@ class Munaqasyah extends MY_Controller
         // Show in
         $crud->add_fields(["jenis_munaqasyah_id", "customer_id", "mulai","usai","trainer","tempat_pelaksanaan","penanggung_jawab","no_contact","status"]);
         $crud->edit_fields(["jenis_munaqasyah_id", "customer_id", "mulai","usai","trainer","tempat_pelaksanaan","penanggung_jawab","no_contact"]);
-        $crud->columns(["actions","tanggal_order", "nama_lembaga","trainer", "status", "penilaian"]);
+        $crud->columns(["actions","mulai","usai","nama_lembaga","trainer", "status"]);
 
         // Fields type
         $crud->field_type("pernyataan", "true_false", array('Tidak','Ya'));
@@ -66,7 +66,8 @@ class Munaqasyah extends MY_Controller
 
         // callback
         $crud->callback_column('actions', array($this, '_callback_actions_column'));
-        $crud->callback_column('tanggal_order', array($this,'_callback_tanggal'));
+        $crud->callback_column('mulai', array($this,'_callback_tanggal'));
+        $crud->callback_column('usai', array($this,'_callback_tanggal'));
         $crud->callback_column('trainer', array($this , '_callback_trainer_column'));
         $crud->callback_column('nama_lembaga', array($this , '_callback_nama_lembaga_column'));
         $crud->callback_column('penilaian', array($this , '_callback_penilaian_column'));
@@ -174,7 +175,17 @@ class Munaqasyah extends MY_Controller
 
         $data = (array) $output;
 
+        $trainer_array = explode(",", $munaqasyah->trainer);
 
+        if(is_array($trainer_array)){
+          foreach($trainer_array as $key => $row){
+            $trainer_array_name[] = db_get_row('trainer', array('id_trainer' => $row))->nama_trainer;
+          }
+          $trainer = implode(", ", $trainer_array_name);
+        } else {
+          $trainer = db_get_row('trainer', array('id_trainer' => $munaqasyah->trainer ))->nama_trainer;
+          // $trainer = $munaqasyah->trainer;
+        }
 
         $lembaga = db_get_row('view_pengguna', array('id_customer' => $munaqasyah->customer_id));
         $data['jenis_sertifikasi'] = db_get_row('tm_jenis_munaqasyah', array('id_jenis_munaqasyah' => $munaqasyah->jenis_munaqasyah_id))->display_name;
@@ -183,6 +194,7 @@ class Munaqasyah extends MY_Controller
         $data['nama_ks'] = $lembaga->kepala_lembaga;
         $data['munaqasyah'] = $munaqasyah;
         $data['tanggal_pelaksanaan'] = DatetoIndo(date('Y-m-d', strtotime($munaqasyah->mulai))).' - '.DatetoIndo(date('Y-m-d', strtotime($munaqasyah->usai)));
+        $data['trainer'] =  $trainer;
 
         $this->layout->set_wrapper('list_peserta_munaqasyah', $data, 'page', false);
 
@@ -223,6 +235,7 @@ class Munaqasyah extends MY_Controller
         $crud->field_type("tempat_lahir", "string");
         $crud->field_type("tanggal_lahir", "date");
         $crud->field_type("alamat", "string");
+        $crud->callback_column('rekap_nilai', array($this, '_callback_rekap_nilai_column'));
         $crud->field_type("kelas", "string");
         $crud->set_field_upload('foto', 'assets/uploads/image');
 
@@ -230,10 +243,8 @@ class Munaqasyah extends MY_Controller
         $crud->callback_after_upload(array($this, '_callback_photo_upload'));
 
 
-        $crud->callback_column('rekap_nilai', array($this, '_callback_rekap_nilai_column'));
         $crud->callback_column('status', array($this, '_callback_status_lulus_column'));
         $crud->callback_before_insert(array($this, '_callback_before_insert'));
-
         // Where clause
         $crud->where(array('munaqasyah_id'=>$munaqasyah->id_munaqasyah));
 
@@ -246,11 +257,22 @@ class Munaqasyah extends MY_Controller
 
         // Unset action
         $crud->unset_action();
-        $crud->unset_print();
+        // $crud->unset_print();
+        $crud->unset_export();
         $crud->unset_delete();
         $crud->unset_add();
 
-        $data = (array) $crud->render();
+
+        $js='<script>
+        $(".tDiv3").append(`<a href="/munaqasyah/hitung_ulang/'.$code.'" class="btn btn-info btn-flat"><i class="fa fa-refresh"></i> Hitung Ulang</a>`);
+        </script>';
+
+        $output = $crud->render();
+
+        $output->output .= $js;
+
+        $data = (array) $output;
+
         $lembaga = db_get_row('view_pengguna', array('id_customer' => $munaqasyah->customer_id));
         $data['jenis_sertifikasi'] = db_get_row('tm_jenis_munaqasyah', array('id_jenis_munaqasyah' => $munaqasyah->jenis_munaqasyah_id))->display_name;
         $data['nama_lembaga'] = $lembaga->nama.' | '.$lembaga->provinsi.' | '.$lembaga->kabupaten;
@@ -269,16 +291,54 @@ class Munaqasyah extends MY_Controller
         $this->layout->render('admin', $template_data); // front - auth - admin
     }
 
+    public function hitung_ulang($code)
+    {
+        $munaqasyah = db_get_row('view_munaqasyah', array('code' => $code));
+        $peserta = db_get_all_data('tm_peserta_munaqasyah', array('munaqasyah_id' => $munaqasyah->id_munaqasyah));
+        $kriteria = db_get_all_data('tm_kriteria_nilai', array('jenis_munaqasyah_id' => $munaqasyah->jenis_munaqasyah_id));
+        foreach ($peserta as $p) {
+            foreach ($kriteria as $k) {
+                $nilai = db_get_row('tm_rekap_nilai', array('peserta_munaqasyah_id' => $p->id_peserta_munaqasyah, 'kriteria_nilai_id' => $k->id_kriteria_nilai))->nilai;
+                if ($nilai < 7.5) {
+                    $s = 1;
+                } else {
+                    $s = 0;
+                }
+                $a[$p->id_peserta_munaqasyah][$k->id_kriteria_nilai] = $s;
+            }
+            $sum_array = array_sum($a[$p->id_peserta_munaqasyah]);
+            if ($sum_array == 0) {
+                $sl = 'lulus';
+            } else {
+                $sl = 'remidi';
+            }
+            $b[] =  array(
+                'id_peserta_munaqasyah' => $p->id_peserta_munaqasyah,
+                'status'                => $sl
+            );
+        }
+        $result = $b;
+        foreach ($result as $r) {
+            $this->db->where('id_peserta_munaqasyah', $r['id_peserta_munaqasyah']);
+            $this->db->update('tm_peserta_munaqasyah', array('status' => $r['status']));
+        }
+
+        redirect_back();
+    }
+
     public function menu_penilaian($id_peserta)
     {
         $row = db_get_row('tm_peserta_munaqasyah', array('id_peserta_munaqasyah' => $id_peserta));
         $munaqasyah = db_get_row('tm_munaqasyah', array('id_munaqasyah' => $row->munaqasyah_id));
         $kriteria = db_get_all_data('tm_kriteria_nilai', 'jenis_munaqasyah_id = '.$munaqasyah->jenis_munaqasyah_id);
+        $peserta = db_get_row('tm_peserta_munaqasyah', array('id_peserta_munaqasyah' => $id_peserta));
 
         $data['kriteria'] = $kriteria;
         $data['nama_peserta'] = $row->nama_lengkap;
         $data['peserta_id'] = $id_peserta;
         $data['alamat_peserta'] = $row->alamat;
+        $data['tempat_lahir'] = $peserta->tempat_lahir;
+        $data['tanggal_lahir'] = $peserta->tanggal_lahir;
         $data['nama_lembaga'] = db_get_row('pengguna', array('id_customer' => $munaqasyah->customer_id))->nama;
         $data['kelas'] = $row->kelas;
         $data['munaqasyah'] = $munaqasyah;
@@ -312,7 +372,7 @@ class Munaqasyah extends MY_Controller
                         'nilai' => $this->input->post('nilai')[$index],
                         'unique' => $unique
                     );
-                print_r($data);
+                // print_r($data);
                 if ($method == 'add') {
                     $this->db->insert('tm_nilai_munaqasyah', $data);
                 } elseif ($method == 'edit') {
@@ -343,6 +403,8 @@ class Munaqasyah extends MY_Controller
 
             $data['nama_peserta'] = $peserta->nama_lengkap;
             $data['alamat_peserta'] = $peserta->alamat;
+            $data['tempat_lahir'] = $peserta->tempat_lahir;
+            $data['tanggal_lahir'] = $peserta->tanggal_lahir;
             $data['nama_lembaga'] = db_get_row('pengguna', array('id_customer' => $munaqasyah->customer_id))->nama;
             $data['kelas'] = $peserta->kelas;
 
@@ -422,6 +484,21 @@ class Munaqasyah extends MY_Controller
         $this->layout->render('admin', $template_data); // front - auth - admin
     }
 
+    public function pdf_rekap_nilai($code)
+    {
+      $munaqasyah = db_get_row('view_munaqasyah', array('code' => $code));
+      $peserta = db_get_all_data('tm_peserta_munaqasyah', array('munaqasyah_id' => $munaqasyah->id_munaqasyah));
+      $lembaga = db_get_row('view_pengguna', array('id_customer' => $munaqasyah->customer_id));
+
+      $kriteria = db_get_all_data('tm_kriteria_nilai', array('jenis_munaqasyah_id' => $munaqasyah->jenis_munaqasyah_id));
+
+      $data['kriteria'] = $kriteria;
+      $data['munaqasyah'] = $munaqasyah;
+      $data['peserta'] = $peserta;
+
+      $this->load->view('rekap_nilai_pdf', $data);
+
+    }
 
     public function pdf_sertifikat($code)
     {
@@ -429,7 +506,7 @@ class Munaqasyah extends MY_Controller
         $peserta = db_get_all_data('tm_peserta_munaqasyah', array('munaqasyah_id' => $munaqasyah->id_munaqasyah, 'status' => 'lulus'));
         $lembaga = db_get_row('view_pengguna', array('id_customer' => $munaqasyah->customer_id));
 
-        $$kriteria = db_get_all_data('tm_kriteria_nilai', array('jenis_munaqasyah_id' => $munaqasyah->jenis_munaqasyah_id));
+        $kriteria = db_get_all_data('tm_kriteria_nilai', array('jenis_munaqasyah_id' => $munaqasyah->jenis_munaqasyah_id));
 
         $berita_acara = db_get_row('tm_berita_acara', array('id' => $munaqasyah->berita_acara_id));
 
@@ -442,11 +519,11 @@ class Munaqasyah extends MY_Controller
         $params = array(
             'mode' => 'utf-8',
             'orientation' => 'L',
-            'margin_left' => '35',
-            'margin_right' => '35',
-            'margin_top' => '85',
+            'margin_left' => '48mm',
+            'margin_right' => '40mm',
+            'margin_top' => '20',
             'margin_bottom' => '0',
-            'default_font' => 'arial'
+            'default_font' => 'dejavu'
         );
 
         $pdf = $this->pdf->load($params);
@@ -470,6 +547,36 @@ class Munaqasyah extends MY_Controller
         $html = $this->load->view('munaqasyah_pdf', $data, true);
         // $html = $this->load->view('munaqasyah_pdf', $data);
 
+        $stylesheet = file_get_contents("https://unpkg.com/basscss@8.0.2/css/basscss.min.css");
+        $stylesheet2 = "
+        body{
+          font-size : 15px
+        }
+        table.bordered {
+          border-collapse:collapse;
+        }
+
+        .a {
+          border: 1px solid black;
+          padding-left:5px;
+          height: 25px;
+        }
+
+        th.b {
+          height: 30px;
+
+        }
+
+        .center {
+          text-align: center;
+        }
+
+
+        ";
+
+
+        $pdf->writeHTML($stylesheet2,1);
+        $pdf->writeHTML($stylesheet,1);
         $pdf->WriteHTML($html, 2);
         // $pdf->Output($filename,'F');
         $pdf->Output();
@@ -520,7 +627,7 @@ class Munaqasyah extends MY_Controller
             if ($sum_array == 0) {
                 $sl = 'lulus';
             } else {
-                $sl = 'tidak_lulus';
+                $sl = 'remidi';
             }
             $b[] =  array(
                 'id_peserta_munaqasyah' => $p->id_peserta_munaqasyah,
@@ -534,7 +641,8 @@ class Munaqasyah extends MY_Controller
         }
 
         return true;
-    }
+      }
+
 
     public function generate_nosert($code)
     {
@@ -648,7 +756,8 @@ class Munaqasyah extends MY_Controller
             );
             return anchor('munaqasyah/approve/'.$row->id_munaqasyah, 'Setujui Kegiatan', $attr);
         } else {
-            return anchor('munaqasyah/peserta/'.$row->code, 'Daftar Peserta', $attr);
+            return anchor('munaqasyah/peserta/'.$row->code, 'Daftar Peserta', $attr)."<br>".
+            anchor('munaqasyah/penilaian/'.$row->code, 'Input Nilai', $attr);
         }
     }
 
@@ -672,16 +781,6 @@ class Munaqasyah extends MY_Controller
         return $html;
     }
 
-    public function _callback_penilaian_column($value, $row)
-    {
-        if ($row->status !== 'permohonan') {
-            $attr = array(
-                'class'     => 'btn btn-warning btn-xs btn-flat',
-            );
-            return anchor('munaqasyah/penilaian/'.$row->code, 'Input Nilai', $attr);
-        }
-    }
-
     public function _callback_status_column($value, $row)
     {
         if ($value == 'terlaksana') {
@@ -691,6 +790,7 @@ class Munaqasyah extends MY_Controller
         } else {
             return '<span class="badge bg-yellow">Permohonan</span>';
         }
+        // return $value;
     }
 
     public function _callback_rekap_nilai_column($value, $row)

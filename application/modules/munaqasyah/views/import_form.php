@@ -14,7 +14,7 @@
             <p class="help-block">FIle yang dapat diimport hanya file dengan extension .xlsx.</p>
           </div>
           <div class="">
-            <b>PERHATIAN : KETIKA MENGISI TANGGAL_LAHIR FORMAT TANGGAL YANG BENAR ADALAH DD/MM/YYYY contoh 05/10/2017</b><br>
+            <b>PERHATIAN : KETIKA MENGISI TANGGAL_LAHIR FORMAT TANGGAL YANG BENAR ADALAH DD-MM-YYYY contoh 05-10-2017</b><br>
             <b>PERHATIKAN DAN JANGAN SAMPAI SALAH INPUT DATA TANGGAL LAHIR YA</b>
           </div>
         </div>

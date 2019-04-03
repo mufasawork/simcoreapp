@@ -305,7 +305,7 @@ if(!function_exists('clean_string')) {
 
 if(!function_exists('is_yyyymmdd')){
   function is_yyyymmdd($date) {
-    if (preg_match("/(0[1-9]|1[0-9]|2[0-9]|3(0|1))\/(0[1-9]|1[0-2])\/\d{4}/",$date)) {
+    if (preg_match("/(0[1-9]|1[0-9]|2[0-9]|3(0|1))\-(0[1-9]|1[0-2])\-\d{4}/",$date)) {
         return true;
       } else {
         return false;

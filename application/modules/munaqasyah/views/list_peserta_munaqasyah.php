@@ -21,17 +21,20 @@
                         <dt>Tanggal Pelaksanaan</dt>
                         <dd><?=$tanggal_pelaksanaan?></dd>
                         <dt>Trainer</dt>
-                        <dd>trainer 1, Trainer 2
-                        </dd>
+                        <dd><?= $trainer ?><dd>
                     </dl>
                 </div>
+                <?php $url_head = short_if($this->uri->segment(2),'peserta','penilaian','peserta'); ?>
+                <?php $val_head = short_if($this->uri->segment(2),'peserta','Input Penilaian','Daftar Peserta'); ?>
                 <?php if($munaqasyah->status == 'disetujui'):?>
                 <div class="col-sm-12">
-                    <a href="../berita_acara/<?=$munaqasyah->code?>/add" class="btn btn-app"><i class="fa fa-edit"></i> Buat berita acara</a>
+                    <a href="/munaqasyah/<?= $url_head?>/<?=$munaqasyah->code?>" class="btn btn-app bg-green"><i class="fa fa-edit"></i> <?= $val_head?> </a>
+                    <a href="/munaqasyah/berita_acara/<?=$munaqasyah->code?>/add" class="btn btn-app float-right bg-yellow"><i class="fa fa-edit"></i> Buat berita acara</a>
                 </div>
                 <?php elseif($munaqasyah->status == 'terlaksana'):?>
                 <div class="col-sm-12">
-                    <a href="../berita_acara/<?=$munaqasyah->code?>/edit/<?=$munaqasyah->berita_acara_id?>" class="btn btn-app"><i class="fa fa-edit"></i> Edit berita acara</a>
+                  <a href="/munaqasyah/<?= $url_head?>/<?=$munaqasyah->code?>" class="btn btn-app bg-green"><i class="fa fa-edit"></i> <?= $val_head?> </a>
+                  <a href="/munaqasyah/berita_acara/<?=$munaqasyah->code?>/edit/<?=$munaqasyah->berita_acara_id?>" class="btn btn-app float-right bg-yellow"><i class="fa fa-edit"></i> Edit berita acara</a>
                 </div>
                 <?php endif?>
             </div>

@@ -41,9 +41,7 @@ class Import extends MY_Controller
 
                 $data['sheet'] = $sheet;
                 $data['code'] = $code;
-                // echo "<pre>";
-                // print_r($data);
-                // $this->message->custom_success_msg('trainer/import/form','Berhasil');
+
             } else {
                 $this->message->custom_error_msg('munaqasyah/import/form/'.$code,'Error: Extensi file yang diijinkan hanya .xlsx cek file anda');
             }
@@ -82,7 +80,7 @@ class Import extends MY_Controller
         foreach ($sheet as $row) {
           // code...
           if ($numrow > 1) {
-              $valid_date = implode("-", array_reverse(explode("/", $row['C'])));
+              $valid_date = implode("-", array_reverse(explode("-", $row['C'])));
 
               // get data from row
               $data = array(
