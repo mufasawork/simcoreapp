@@ -44,8 +44,7 @@
                         <dt>Alamat</dt>
                         <dd><?= $alamat_peserta?></dd>
                         <dt>Tempat, Tanggal Lahir</dt>
-                        <dd></dd>
-                        <dd></dd>
+                        <dd><?=$tempat_lahir?>, <?=dateFormat($tanggal_lahir)?></dd>
                         <dt>Sekolah / Lembaga</dt>
                         <dd><?= $nama_lembaga?></dd>
                         <dt>Kelas</dt>
