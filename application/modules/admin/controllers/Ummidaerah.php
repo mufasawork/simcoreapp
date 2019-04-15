@@ -106,7 +106,7 @@ class Ummidaerah extends MY_Controller
         $config = array(
           'main_table' => 'pengguna',
           'main_table_primary' => 'id_customer',
-          'url' => base_url().'/ummidaerah/' . __CLASS__ . '/' . __FUNCTION__ . '/', //path to method
+          'url' =>  '/admin/'.__CLASS__ . '/' . __FUNCTION__ . '/', //path to method
       );
 
         $wilayah = new gc_dependent_select($crud, $fields, $config);
